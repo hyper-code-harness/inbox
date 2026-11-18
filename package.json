@@ -1,7 +1,11 @@
 {
   "name": "inbox",
-  "private": true,
+  "version": "1.0.0",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hyper-code-harness/inbox"
+  },
   "procs": {
     "configuration": {
       "settings": [
@@ -22,5 +26,8 @@
     "@noble/curves": "^2.4.0",
     "@noble/hashes": "^2.4.0",
     "nostr-tools": "^2.25.2"
+  },
+  "scripts": {
+    "test": "bun ${HYPER_CODE:-../hyper-code}/script/plugin-test.ts ."
   }
 }

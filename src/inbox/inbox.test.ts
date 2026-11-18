@@ -2,7 +2,7 @@ import { afterAll, beforeAll, expect, test } from "bun:test";
 import { SQL } from "bun";
 import { existsSync } from "node:fs";
 import { homedir } from "node:os";
-import { mkTestCtx } from "../../../../src/_testCtx.entry";
+import { testCtx } from "hyper:test";
 
 // End to end against the REAL Hypermesh relay code (~/hypermesh, CP relay + its own inbox client for people) on a throwaway
 // Postgres schema, with this plugin as the Hyper side. Skipped when the hypermesh checkout is not next to this repo.
@@ -59,7 +59,7 @@ beforeAll(async () => {
     await hm.fns.cp.apply({ cfg: { sql, zone: ZONE, netbirdApi: "", netbirdToken: "", gatewayPeer: "", denyRule: "X", ipSource: "net" },
         identity, intent: hm.fns.agent.parseIntent({ raw: JSON.stringify({ version: 2, tenant: "team", node: "box", services: [{ name: "hyper", port: 3443, scheme: "https", kind: "hyper", health: "/" }] }) }) });
     // This Hyper: the plugin on a test ctx, its relay requests coming from the node's overlay address.
-    ctx = await mkTestCtx({ db: hyperUrl, env: { PROCS_PLUGINS: "./plugins", HYPER_OAUTH_ENCRYPTION_KEY: Buffer.alloc(32, 7).toString("base64"),
+    ctx = await testCtx({ env: { DATABASE_URL: hyperUrl, HYPER_OAUTH_ENCRYPTION_KEY: Buffer.alloc(32, 7).toString("base64"),
         INBOX_RELAY: "https://control.hn.hyper-mesh.xyz", INBOX_HOST: HOST, INBOX_PRINCIPAL: "spiffe://hn/team/box" } });
     const inboxMigration = (await import("./$migration_20330810120000_inbox.ts")).default;
     await inboxMigration.up(ctx);
